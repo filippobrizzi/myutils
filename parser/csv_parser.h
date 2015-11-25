@@ -1,10 +1,13 @@
 #include <fstream>
 #include <vector>
-#include <Eigen/Dense>
+
+#ifdef USE_EIGEN
+	#include <Eigen/Dense>
+#endif)
 
 namespace myutil
 {
-class CsvParser
+class CsvManager
 {
 public:
 	enum Error
@@ -13,8 +16,33 @@ public:
 		INVALID_FILE_NAME
 	}
 
-	static Error parse(const std::string file_name, 
+#ifdef USE_EIGEN
+	static Error parse(const std::string &file_name, 
 					  std::vector<Eigen::VectorXd> &csv_values)
+	{
+		return parse<Eigen::VectorXd>(file_name, csv_values);
+	}
+	static Error write(const std::string &file_name,
+					  const std::vector<Eigen::VectorXd> &csv_values)
+	{
+		return write<Eigen::VectorXd>(file_name, csv_values);
+	}
+#endif
+
+	static Error parse(const std::string &file_name, 
+					  std::vector<std::vector<double> > &csv_values)
+	{
+		return parse<std::vector<double>(file_name, csv_values);
+	}
+	static Error write(const std::string &file_name,
+					  const std::vector<std::vector<double> > &csv_values)
+	{
+		return write<std::vector<double> >(file_name, csv_values);
+	}
+private:
+	template<class T>
+	static Error parse(const std::string &file_name, 
+					  std::vector<class T> &csv_values)
 	{
 		std::ifstream file(file_name);
 		if (!file.is_open())
@@ -34,20 +62,37 @@ public:
 	        {
 	        	line_accumulator.push_back(filed);
 	        }
-	        Eigen::VectorXd value(line_accumulator.size());
+	        T value(line_accumulator.size());
 	        for (int i = 0; i < line_accumulator.size(); ++i)
 	        	value[i] = std::stod(line_accumulator[i]);
 
 	        csv_values.push_back(value);
     	}
+    	file.close()
+    	return NO_ERROR;
 	}
 
-	static bool parse(const std::string file_name, 
-					  std::vector<std::vector<double> > &csv_values)
+	template<class T>
+	static Error write(const std::string &file_name,
+					  const std::vector<T> &csv_values)
 	{
+		std::ofstream file(file_name);
+		if (!file.is_open())
+		{
+			return INVALID_FILE_NAME;
+		}
 
-	}	
+		for (auto values : csv_values)
+		{
+			file << values[0];
+			for (int i = 1; i < values; ++i)
+				file << "," << values[i];
+			file << std::endl;
+		}
+		file.close();
 
+		return NO_ERROR;
+	}
 };
 
 
