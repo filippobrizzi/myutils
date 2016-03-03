@@ -7,6 +7,8 @@
 
 namespace myutil
 {
+namespace parser
+{
 class CsvManager
 {
 public:
@@ -95,5 +97,5 @@ private:
 	}
 };
 
-
+}
 }
