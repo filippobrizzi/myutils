@@ -3,12 +3,19 @@
 #include <type_traits>
 #include <functional>
 
+#include <myutil/tl/is_any.hpp>
+
+namespace myutil
+{
+
+namespace tl
+{
+
 template<class Container>
 struct count_access
 {
-	static_assert(std::is_same<typename std::iterator_traits<typename Container::iterator>::iterator_category,
-							   std::random_access_iterator_tag>::value,
-				  "Template type not valid, must have an iterator");
+	static_assert(is_container<Container>::value,
+				  "Template type not valid, is not a container");
 	struct iterator
 	{
 		using iterator_t = typename std::conditional<std::is_const<Container>::value,
@@ -83,4 +90,7 @@ template<class Container>
 count_access<const Container> count_iteration(const Container & data)
 {
 	return count_access<const Container>(data);
+}
+
+}
 }

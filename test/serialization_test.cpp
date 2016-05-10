@@ -43,7 +43,7 @@ public:
 template<class T>
 void print(const T &o)
 {
-	std::cout << serialize(o) << std::endl;
+	std::cout << myutil::tl::serialize(o) << std::endl;
 }
 
 int main()

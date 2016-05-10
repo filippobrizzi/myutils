@@ -1,21 +1,21 @@
 #include <iostream>
 #include <vector>
 
-#include "tl/count_iterator.hpp"
+#include <myutil/tl/count_iterator.hpp>
 
 int main()
 {
 
 	std::vector<int> v = {1, 1, 2, 3, 5, 8, 13, 21, 34};
 
-	for (auto it : count_iteration(v))
+	for (auto it : myutil::tl::count_iteration(v))
 	{
 		std::cout << it.first << " " << it.second << std::endl;
 		it.second = 1;
 	}
 	std::cout << " ..... " << std::endl;
 
-	for (auto it : count_iteration(v))
+	for (auto it : myutil::tl::count_iteration(v))
 	{
 		std::cout << it.first << " " << it.second << std::endl;
 	}
@@ -25,7 +25,7 @@ int main()
 
 
 	std::cout << "-------------" << std::endl;
-	for (auto it : count_iteration(vv))
+	for (auto it : myutil::tl::count_iteration(vv))
 	{
 		std::cout << it.first << " " << it.second << std::endl;
 		//it.second = 1;
@@ -39,7 +39,7 @@ int main()
 			int b;
 		};
 		A a;
-		auto b = count_iteration(a);
+		auto b = myutil::tl::count_iteration(a);
 	}
 
 
