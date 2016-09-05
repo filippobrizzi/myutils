@@ -39,7 +39,7 @@ int main()
 			int b;
 		};
 		A a;
-		auto b = myutil::tl::count_iteration(a);
+		// auto b = myutil::tl::count_iteration(a); // ERROR static assert fail
 	}
 
 

@@ -1,11 +1,14 @@
-#define USE_EIGEN
+//#define USE_EIGEN
 
-#include "csv_parser.h"
+#include <iostream>
+
+#include <myutil/parser/csv_parser.h>
 
 
 
 int main(int argc, char **argv)
 {
+	/**
 	if (argc != 2)
 	{
 		std::cerr << "Pass a csv file to be parsed!\n";
@@ -17,7 +20,7 @@ int main(int argc, char **argv)
 	std::cout << "Eigen test\n";
 	std::cout << "Parse\n";
 	std::vector<Eigen::VectorXd> values;
-	if (myutil::CsvManager::parse(file_name, values) == 0)
+	if (myutil::parser::CsvManager::parse(file_name, values) == 0)
 	{
 		for (auto v : values)
 			std::cout << v.transpose() << std::endl;
@@ -25,17 +28,12 @@ int main(int argc, char **argv)
 		std::cout << "Eigen test SUCCESS\n";
 
 		std::cout << "Write\n";
-		if (myutil::CsvManager::write(file_name))	
+		//if (myutil::parser::CsvManager::write(file_name))	
 	}
 	else
 	{
 		std::cerr << "Eigen test FAIL\n";
 	}
-
-	
-
-	std::cout << "std::vector test\n";
-	std::vector
-
+*/
 }
 

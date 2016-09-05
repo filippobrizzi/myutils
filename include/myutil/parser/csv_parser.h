@@ -1,9 +1,13 @@
+#pragma once
+
 #include <fstream>
+#include <sstream>
+#include <string>
 #include <vector>
 
 #ifdef USE_EIGEN
 	#include <Eigen/Dense>
-#endif)
+#endif
 
 namespace myutil
 {
@@ -12,44 +16,17 @@ namespace parser
 class CsvManager
 {
 public:
-	enum Error
-	{
-		NO_ERROR = 0,
-		INVALID_FILE_NAME
-	}
+	
 
-#ifdef USE_EIGEN
-	static Error parse(const std::string &file_name, 
-					  std::vector<Eigen::VectorXd> &csv_values)
-	{
-		return parse<Eigen::VectorXd>(file_name, csv_values);
-	}
-	static Error write(const std::string &file_name,
-					  const std::vector<Eigen::VectorXd> &csv_values)
-	{
-		return write<Eigen::VectorXd>(file_name, csv_values);
-	}
-#endif
-
-	static Error parse(const std::string &file_name, 
-					  std::vector<std::vector<double> > &csv_values)
-	{
-		return parse<std::vector<double>(file_name, csv_values);
-	}
-	static Error write(const std::string &file_name,
-					  const std::vector<std::vector<double> > &csv_values)
-	{
-		return write<std::vector<double> >(file_name, csv_values);
-	}
-private:
+//private:
 	template<class T>
-	static Error parse(const std::string &file_name, 
-					  std::vector<class T> &csv_values)
+	static bool parse(const std::string &file_name, 
+					  std::vector<T> &csv_values)
 	{
 		std::ifstream file(file_name);
 		if (!file.is_open())
 		{
-			return INVALID_FILE_NAME;
+			return false;
 		}
 
 		csv_values.clear();
@@ -60,9 +37,9 @@ private:
     		std::istringstream ss(line);
 	        std::string field;
 	        std::vector<std::string> line_accumulator;
-	        while(std::getline(ss, filed, ','))
+	        while(std::getline(ss, field, ','))
 	        {
-	        	line_accumulator.push_back(filed);
+	        	line_accumulator.push_back(field);
 	        }
 	        T value(line_accumulator.size());
 	        for (int i = 0; i < line_accumulator.size(); ++i)
@@ -70,32 +47,57 @@ private:
 
 	        csv_values.push_back(value);
     	}
-    	file.close()
-    	return NO_ERROR;
+    	file.close();
+    	return true;
 	}
 
 	template<class T>
-	static Error write(const std::string &file_name,
+	static bool write(const std::string &file_name,
 					  const std::vector<T> &csv_values)
 	{
 		std::ofstream file(file_name);
 		if (!file.is_open())
 		{
-			return INVALID_FILE_NAME;
+			return false;
 		}
 
 		for (auto values : csv_values)
 		{
 			file << values[0];
-			for (int i = 1; i < values; ++i)
+			for (int i = 1; i < values.size(); ++i)
 				file << "," << values[i];
 			file << std::endl;
 		}
 		file.close();
 
-		return NO_ERROR;
+		return true;
 	}
 };
+
+#ifdef USE_EIGEN
+static bool csvParse(const std::string &file_name, 
+				  std::vector<Eigen::VectorXd> &csv_values)
+{
+	return CsvManager::parse<Eigen::VectorXd>(file_name, csv_values);
+}
+;
+static bool csvWrite(const std::string &file_name,
+				  const std::vector<Eigen::VectorXd> &csv_values)
+{
+	return CsvManager::write<Eigen::VectorXd>(file_name, csv_values);
+}
+#endif
+
+static bool csvParse(const std::string &file_name, 
+				  std::vector<std::vector<double> > &csv_values)
+{
+	return CsvManager::parse<std::vector<double> >(file_name, csv_values);
+}
+static bool csvWrite(const std::string &file_name,
+				  const std::vector<std::vector<double> > &csv_values)
+{
+	return CsvManager::write<std::vector<double> >(file_name, csv_values);
+}
 
 }
 }
