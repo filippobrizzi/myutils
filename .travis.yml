@@ -1,9 +1,14 @@
 language: c++
 install:
-  - hg clone https://bitbucket.org/eigen/eigen/ && cd eigen && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build . && sudo make install
+  - hg clone https://bitbucket.org/eigen/eigen/ && 
+  - pushd eigen3 && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build . && sudo make install  && popd
 compiler:
   - clang
   - gcc
 script:
-  - mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release ..
+before_script:
+  - make
 
